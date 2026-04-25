@@ -1,15 +1,26 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './SoundTile.css';
 
 interface SoundTileProps {
   icon: string;
   label: string;
   soundUrl: string;
+  forceMute?: boolean;
 }
 
-const SoundTile = ({ icon, label, soundUrl }: SoundTileProps) => {
+const SoundTile = ({ icon, label, soundUrl, forceMute }: SoundTileProps) => {
   const [volume, setVolume] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      if (forceMute) {
+        audioRef.current.volume = 0;
+      } else {
+        audioRef.current.volume = volume;
+      }
+    }
+  }, [forceMute, volume]);
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value);
@@ -26,7 +37,7 @@ const SoundTile = ({ icon, label, soundUrl }: SoundTileProps) => {
   };
 
   return (
-    <div className={`sound-tile glass-card ${volume > 0 ? 'active' : ''}`}>
+    <div className={`sound-tile glass-card ${volume > 0 && !forceMute ? 'active' : ''}`}>
       <audio ref={audioRef} src={soundUrl} loop />
       <div className="tile-icon">{icon}</div>
       <div className="tile-info">

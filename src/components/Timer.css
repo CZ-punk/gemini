@@ -4,12 +4,51 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  min-height: 300px;
+  justify-content: center;
 }
 
-.timer-card h3 {
-  font-size: 1.2rem;
+.timer-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.timer-header h3 {
+  font-size: 1rem;
   color: var(--text-secondary);
   font-weight: 500;
+}
+
+.edit-toggle {
+  font-size: 0.8rem;
+  color: var(--accent-color);
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(96, 165, 250, 0.1);
+}
+
+.timer-setup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.timer-setup input {
+  width: 80px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 10px;
+  color: white;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .time-display {
@@ -17,6 +56,7 @@
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   letter-spacing: -2px;
+  margin: 10px 0;
 }
 
 .timer-controls {
