@@ -1,0 +1,52 @@
+.timer-card {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.timer-card h3 {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.time-display {
+  font-size: 5rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -2px;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 15px;
+}
+
+.timer-btn {
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.timer-btn.start {
+  background: white;
+  color: black;
+}
+
+.timer-btn.pause {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.timer-btn.reset {
+  color: var(--text-secondary);
+}
+
+.timer-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
