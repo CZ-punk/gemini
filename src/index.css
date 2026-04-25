@@ -27,10 +27,10 @@ body {
   background: var(--bg-gradient);
   color: var(--text-primary);
   min-height: 100vh;
-  overflow: hidden;
+  /* overflow: hidden 제거하여 스크롤 허용 */
+  overflow-y: auto; 
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
 
 #root {

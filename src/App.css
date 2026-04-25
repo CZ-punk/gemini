@@ -1,12 +1,12 @@
 .zen-app {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
   position: relative;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background 2s ease;
+  padding: 40px 0; /* 상하 여백 추가 */
 }
 
 .zen-app.day {
@@ -18,10 +18,12 @@
 }
 
 .bg-blobs {
-  position: absolute;
+  position: fixed; /* 배경 블롭은 고정 */
   width: 100%;
   height: 100%;
   z-index: 0;
+  top: 0;
+  left: 0;
 }
 
 .blob {
@@ -55,10 +57,11 @@
   max-width: 900px;
   width: 90%;
   text-align: center;
+  margin: 0 auto;
 }
 
 .zen-header {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .header-top {
@@ -76,6 +79,7 @@
   font-size: 0.9rem;
   font-weight: 600;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .master-control:hover {
@@ -97,11 +101,14 @@
   display: grid;
   grid-template-columns: 1fr 350px;
   gap: 30px;
-  align-items: center;
+  align-items: flex-start; /* 상단 정렬 */
 }
 
 @media (max-width: 850px) {
   .zen-content {
     grid-template-columns: 1fr;
+  }
+  .zen-app {
+    padding: 60px 0;
   }
 }

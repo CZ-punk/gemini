@@ -13,11 +13,12 @@ function App() {
     else setBgStyle('night');
   }, []);
 
+  // 더 안정적인 공개 음원 소스 (GitHub 기반 CDN)
   const sounds = [
-    { icon: "🌧", label: "Rain", url: "https://www.soundjay.com/nature/rain-01.mp3" },
-    { icon: "🌲", label: "Forest", url: "https://www.soundjay.com/nature/forest-wind-1.mp3" },
-    { icon: "🌊", label: "Waves", url: "https://www.soundjay.com/nature/ocean-wave-1.mp3" },
-    { icon: "🔥", label: "Fire", url: "https://www.soundjay.com/nature/fire-1.mp3" }
+    { icon: "🌧", label: "Rain", url: "https://raw.githubusercontent.com/Anand-S-K/Ambient-Sounds/main/sounds/rain.mp3" },
+    { icon: "🌲", label: "Forest", url: "https://raw.githubusercontent.com/Anand-S-K/Ambient-Sounds/main/sounds/forest.mp3" },
+    { icon: "🌊", label: "Waves", url: "https://raw.githubusercontent.com/Anand-S-K/Ambient-Sounds/main/sounds/ocean.mp3" },
+    { icon: "🔥", label: "Fire", url: "https://raw.githubusercontent.com/Anand-S-K/Ambient-Sounds/main/sounds/fireplace.mp3" }
   ];
 
   return (
