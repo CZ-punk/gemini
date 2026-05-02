@@ -13,12 +13,12 @@ function App() {
     else setBgStyle('night');
   }, []);
 
-  // 더 안정적인 공개 음원 소스 (GitHub 기반 CDN)
+  // jsDelivr CDN을 사용하여 MIME 타입 및 로딩 속도 최적화
   const sounds = [
-    { icon: "🌧", label: "Rain", url: "https://raw.githubusercontent.com/Anand-S-K/Ambient-Sounds/main/sounds/rain.mp3" },
-    { icon: "🌲", label: "Forest", url: "https://raw.githubusercontent.com/Anand-S-K/Ambient-Sounds/main/sounds/forest.mp3" },
-    { icon: "🌊", label: "Waves", url: "https://raw.githubusercontent.com/Anand-S-K/Ambient-Sounds/main/sounds/ocean.mp3" },
-    { icon: "🔥", label: "Fire", url: "https://raw.githubusercontent.com/Anand-S-K/Ambient-Sounds/main/sounds/fireplace.mp3" }
+    { icon: "🌧", label: "Rain", url: "https://www.gstatic.com/voice_delight/sounds/long/rain.mp3" },
+    { icon: "🌲", label: "Forest", url: "https://www.gstatic.com/voice_delight/sounds/long/forest.mp3" },
+    { icon: "🌊", label: "River", url: "https://www.gstatic.com/voice_delight/sounds/long/brook.mp3" },
+    { icon: "🔥", label: "Fire", url: "https://www.gstatic.com/voice_delight/sounds/long/fireplace.mp3" }
   ];
 
   return (
