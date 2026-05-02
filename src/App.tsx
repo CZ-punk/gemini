@@ -79,6 +79,11 @@ function App() {
             </div>
           </div>
           <p>당신만의 완벽한 몰입의 순간</p>
+          {!isTimerRunning && !isMuted && (
+            <div className="timer-notice">
+              ⚠️ 타이머를 시작(Start)해야 소리가 재생됩니다.
+            </div>
+          )}
         </header>
 
         <div className="zen-content">
