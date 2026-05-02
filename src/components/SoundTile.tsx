@@ -13,54 +13,68 @@ const SoundTile = ({ icon, label, soundUrl, forceMute }: SoundTileProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
 
-  // Web Audio API 초기화
-  const initAudio = () => {
+  // Web Audio API 초기화 (사용자 제스처 시 호출)
+  const initAudioContext = () => {
     if (!audioContextRef.current && audioRef.current) {
-      const AudioContextClass = (window.AudioContext || (window as any).webkitAudioContext);
-      const ctx = new AudioContextClass();
-      const gainNode = ctx.createGain();
-      const source = ctx.createMediaElementSource(audioRef.current);
+      try {
+        const AudioContextClass = (window.AudioContext || (window as any).webkitAudioContext);
+        const ctx = new AudioContextClass();
+        const gainNode = ctx.createGain();
+        const source = ctx.createMediaElementSource(audioRef.current);
 
-      source.connect(gainNode).connect(ctx.destination);
-      
-      audioContextRef.current = ctx;
-      gainNodeRef.current = gainNode;
-      sourceRef.current = source;
+        source.connect(gainNode).connect(ctx.destination);
+        
+        audioContextRef.current = ctx;
+        gainNodeRef.current = gainNode;
+      } catch (e) {
+        console.error("Web Audio API init failed:", e);
+      }
     }
-
+    
     if (audioContextRef.current?.state === 'suspended') {
       audioContextRef.current.resume();
     }
   };
 
   useEffect(() => {
-    if (gainNodeRef.current) {
-      // 로그 스케일 적용하여 자연스러운 볼륨 변화 구현
-      const adjustedVolume = forceMute ? 0 : Math.pow(volume, 2);
-      
-      // GainNode를 통한 모바일 호환 볼륨 조절
-      gainNodeRef.current.gain.setTargetAtTime(adjustedVolume, audioContextRef.current!.currentTime, 0.1);
-      
-      if (adjustedVolume > 0 && audioRef.current?.paused) {
-        audioRef.current.play().catch(err => console.warn("Playback blocked:", err));
-      } else if (adjustedVolume === 0 && !audioRef.current?.paused) {
-        audioRef.current?.pause();
+    if (!audioRef.current) return;
+
+    const adjustedVolume = forceMute ? 0 : Math.pow(volume, 2);
+
+    // 1. Web Audio API 방식 (지원되는 경우)
+    if (gainNodeRef.current && audioContextRef.current) {
+      gainNodeRef.current.gain.setTargetAtTime(
+        adjustedVolume, 
+        audioContextRef.current.currentTime, 
+        0.05
+      );
+    } 
+    
+    // 2. 표준 방식 폴백 (둘 다 적용하여 모바일 호환성 극대화)
+    audioRef.current.volume = adjustedVolume;
+
+    if (adjustedVolume > 0) {
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          // 자동 재생 방지 정책 대응
+          console.warn("Playback prevented:", error);
+        });
       }
+    } else {
+      audioRef.current.pause();
     }
   }, [forceMute, volume]);
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value);
     setVolume(val);
-    
-    // 첫 상호작용 시 오디오 컨텍스트 초기화
-    initAudio();
+    initAudioContext(); // 슬라이더 조작 시 컨텍스트 활성화
   };
 
   return (
-    <div className={`sound-tile glass-card ${volume > 0 && !forceMute ? 'active' : ''}`}>
+    <div className={`sound-tile glass-card ${volume > 0 && !forceMute ? 'active' : ''} ${forceMute && volume > 0 ? 'waiting' : ''}`}>
       <audio 
         ref={audioRef} 
         src={soundUrl} 
@@ -70,7 +84,10 @@ const SoundTile = ({ icon, label, soundUrl, forceMute }: SoundTileProps) => {
       />
       <div className="tile-icon">{icon}</div>
       <div className="tile-info">
-        <span className="tile-label">{label}</span>
+        <span className="tile-label">
+          {label}
+          {forceMute && volume > 0 && <span className="status-badge"> (Start Timer)</span>}
+        </span>
         <input 
           type="range" 
           min="0" 
