@@ -109,7 +109,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
+  padding: 0 16px; /* 좌우 패딩 미세 축소 */
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
@@ -119,6 +119,7 @@
   color: white;
   cursor: pointer;
   box-sizing: border-box;
+  white-space: nowrap; /* 줄바꿈 방지 */
 }
 
 .init-control:hover {
@@ -131,14 +132,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
+  padding: 0 16px; /* 좌우 패딩 미세 축소 */
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
   font-size: 0.9rem;
   font-weight: 600;
   transition: all 0.3s ease;
-  white-space: nowrap;
+  white-space: nowrap; /* 줄바꿈 방지 */
   box-sizing: border-box;
 }
 
@@ -170,5 +171,21 @@
   }
   .zen-app {
     padding: 60px 0;
+  }
+  .header-top {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  .header-controls {
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+  }
+  .init-control, .master-control {
+    flex: 1;
+    max-width: 150px;
+    font-size: 0.85rem;
+    padding: 0 10px;
   }
 }
