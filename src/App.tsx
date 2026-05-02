@@ -6,6 +6,7 @@ import Timer from './components/Timer';
 function App() {
   const [bgStyle, setBgStyle] = useState('day');
   const [isMuted, setIsMuted] = useState(false);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -51,14 +52,14 @@ function App() {
                   icon={sound.icon} 
                   label={sound.label} 
                   soundUrl={sound.url} 
-                  forceMute={isMuted}
+                  forceMute={isMuted || !isTimerRunning}
                 />
               ))}
             </div>
           </section>
 
           <section className="timer-section">
-            <Timer />
+            <Timer onStatusChange={setIsTimerRunning} />
           </section>
         </div>
       </main>

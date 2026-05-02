@@ -1,12 +1,20 @@
 import { useState, useEffect } from 'react';
 import './Timer.css';
 
-const Timer = () => {
+interface TimerProps {
+  onStatusChange: (isActive: boolean) => void;
+}
+
+const Timer = ({ onStatusChange }: TimerProps) => {
   const [inputMinutes, setInputMinutes] = useState(25);
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    onStatusChange(isActive);
+  }, [isActive, onStatusChange]);
 
   useEffect(() => {
     let interval: any = null;
