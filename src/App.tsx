@@ -7,12 +7,18 @@ function App() {
   const [bgStyle, setBgStyle] = useState('day');
   const [isMuted, setIsMuted] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour >= 6 && hour < 18) setBgStyle('day');
     else setBgStyle('night');
   }, []);
+
+  const handleInit = () => {
+    setResetKey(prev => prev + 1);
+    setIsMuted(false);
+  };
 
   // jsDelivr CDN을 사용하여 MIME 타입 및 로딩 속도 최적화
   const sounds = [
@@ -33,12 +39,17 @@ function App() {
         <header className="zen-header">
           <div className="header-top">
             <h1>Zen Space</h1>
-            <button 
-              className={`master-control ${isMuted ? 'muted' : ''}`}
-              onClick={() => setIsMuted(!isMuted)}
-            >
-              {isMuted ? '🔇 Resume All' : '🔊 Mute All'}
-            </button>
+            <div className="header-controls">
+              <button className="init-control" onClick={handleInit}>
+                🔄 Init
+              </button>
+              <button 
+                className={`master-control ${isMuted ? 'muted' : ''}`}
+                onClick={() => setIsMuted(!isMuted)}
+              >
+                {isMuted ? '🔇 Resume All' : '🔊 Mute All'}
+              </button>
+            </div>
           </div>
           <p>당신만의 완벽한 몰입의 순간</p>
         </header>
@@ -48,7 +59,7 @@ function App() {
             <div className="sound-grid">
               {sounds.map((sound, i) => (
                 <SoundTile 
-                  key={i} 
+                  key={`${i}-${resetKey}`} 
                   icon={sound.icon} 
                   label={sound.label} 
                   soundUrl={sound.url} 
