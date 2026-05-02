@@ -11,17 +11,42 @@ interface SoundTileProps {
 const SoundTile = ({ icon, label, soundUrl, forceMute }: SoundTileProps) => {
   const [volume, setVolume] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+
+  // Web Audio API 초기화
+  const initAudio = () => {
+    if (!audioContextRef.current && audioRef.current) {
+      const AudioContextClass = (window.AudioContext || (window as any).webkitAudioContext);
+      const ctx = new AudioContextClass();
+      const gainNode = ctx.createGain();
+      const source = ctx.createMediaElementSource(audioRef.current);
+
+      source.connect(gainNode).connect(ctx.destination);
+      
+      audioContextRef.current = ctx;
+      gainNodeRef.current = gainNode;
+      sourceRef.current = source;
+    }
+
+    if (audioContextRef.current?.state === 'suspended') {
+      audioContextRef.current.resume();
+    }
+  };
 
   useEffect(() => {
-    if (audioRef.current) {
-      // 인간의 청각은 로그 스케일에 가깝게 반응하므로 볼륨 곡선을 조정합니다.
+    if (gainNodeRef.current) {
+      // 로그 스케일 적용하여 자연스러운 볼륨 변화 구현
       const adjustedVolume = forceMute ? 0 : Math.pow(volume, 2);
-      audioRef.current.volume = adjustedVolume;
       
-      if (adjustedVolume > 0 && audioRef.current.paused) {
-        audioRef.current.play().catch(err => console.warn("Auto-play blocked:", err));
-      } else if (adjustedVolume === 0 && !audioRef.current.paused) {
-        audioRef.current.pause();
+      // GainNode를 통한 모바일 호환 볼륨 조절
+      gainNodeRef.current.gain.setTargetAtTime(adjustedVolume, audioContextRef.current!.currentTime, 0.1);
+      
+      if (adjustedVolume > 0 && audioRef.current?.paused) {
+        audioRef.current.play().catch(err => console.warn("Playback blocked:", err));
+      } else if (adjustedVolume === 0 && !audioRef.current?.paused) {
+        audioRef.current?.pause();
       }
     }
   }, [forceMute, volume]);
@@ -29,6 +54,9 @@ const SoundTile = ({ icon, label, soundUrl, forceMute }: SoundTileProps) => {
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value);
     setVolume(val);
+    
+    // 첫 상호작용 시 오디오 컨텍스트 초기화
+    initAudio();
   };
 
   return (
@@ -38,6 +66,7 @@ const SoundTile = ({ icon, label, soundUrl, forceMute }: SoundTileProps) => {
         src={soundUrl} 
         loop 
         preload="auto"
+        crossOrigin="anonymous"
       />
       <div className="tile-icon">{icon}</div>
       <div className="tile-info">
