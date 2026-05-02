@@ -51,6 +51,33 @@
   animation-delay: -5s;
 }
 
+.ripple {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: ripple-effect 2s ease-out forwards;
+  z-index: 5;
+}
+
+@keyframes ripple-effect {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    width: 500px;
+    height: 500px;
+    opacity: 0;
+    box-shadow: 0 0 0 40px rgba(255, 255, 255, 0);
+  }
+}
+
 .zen-container {
   position: relative;
   z-index: 1;

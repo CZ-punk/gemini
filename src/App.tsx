@@ -8,12 +8,31 @@ function App() {
   const [isMuted, setIsMuted] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [resetKey, setResetKey] = useState(0);
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
 
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour >= 6 && hour < 18) setBgStyle('day');
     else setBgStyle('night');
   }, []);
+
+  const handleInteraction = (e: React.MouseEvent | React.TouchEvent) => {
+    const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    
+    const newRipple = {
+      id: Date.now(),
+      x: clientX,
+      y: clientY
+    };
+
+    setRipples(prev => [...prev, newRipple]);
+
+    // 2초 후 물결 제거
+    setTimeout(() => {
+      setRipples(prev => prev.filter(r => r.id !== newRipple.id));
+    }, 2000);
+  };
 
   const handleInit = () => {
     setResetKey(prev => prev + 1);
@@ -29,11 +48,19 @@ function App() {
   ];
 
   return (
-    <div className={`zen-app ${bgStyle}`}>
+    <div className={`zen-app ${bgStyle}`} onMouseDown={handleInteraction}>
       <div className="bg-blobs">
         <div className="blob blob-1"></div>
         <div className="blob blob-2"></div>
       </div>
+
+      {ripples.map(ripple => (
+        <div 
+          key={ripple.id} 
+          className="ripple" 
+          style={{ left: ripple.x, top: ripple.y }}
+        />
+      ))}
 
       <main className="zen-container">
         <header className="zen-header">
